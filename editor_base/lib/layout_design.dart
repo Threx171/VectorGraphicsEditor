@@ -21,6 +21,8 @@ class LayoutDesignState extends State<LayoutDesign> {
   Offset _scrollCenter = const Offset(0, 0);
   bool _isMouseButtonPressed = false;
   bool _isAltOptionKeyPressed = false;
+  bool _isCtrlKeyPressed = false;
+  bool _isShiftKeyPressed = false;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -107,10 +109,33 @@ class LayoutDesignState extends State<LayoutDesign> {
                 if (event is RawKeyDownEvent) {
                   if (event.logicalKey == LogicalKeyboardKey.altLeft) {
                     _isAltOptionKeyPressed = true;
+                  } else if (event.logicalKey ==
+                          LogicalKeyboardKey.controlLeft ||
+                      event.logicalKey == LogicalKeyboardKey.metaLeft) {
+                    _isCtrlKeyPressed = true;
+                  } else if (event.logicalKey == LogicalKeyboardKey.shiftLeft &&
+                      !_isShiftKeyPressed) {
+                    _isShiftKeyPressed = true;
+                  } else if (_isCtrlKeyPressed &&
+                      _isShiftKeyPressed &&
+                      event.logicalKey == LogicalKeyboardKey.keyZ) {
+                    _isCtrlKeyPressed = false;
+                    _isShiftKeyPressed = false;
+                    appData.redo();
+                  } else if (_isCtrlKeyPressed &&
+                      event.logicalKey == LogicalKeyboardKey.keyZ) {
+                    appData.undo();
+                    _isCtrlKeyPressed = false;
                   }
                 } else if (event is RawKeyUpEvent) {
                   if (event.logicalKey == LogicalKeyboardKey.altLeft) {
                     _isAltOptionKeyPressed = false;
+                  } else if (event.logicalKey ==
+                          LogicalKeyboardKey.controlLeft ||
+                      event.logicalKey == LogicalKeyboardKey.metaLeft) {
+                    _isCtrlKeyPressed = false;
+                  } else if (event.logicalKey == LogicalKeyboardKey.shiftLeft) {
+                    _isShiftKeyPressed = false;
                   }
                 }
               },

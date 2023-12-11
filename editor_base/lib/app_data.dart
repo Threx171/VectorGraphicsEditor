@@ -11,7 +11,7 @@ class AppData with ChangeNotifier {
   String toolSelected = "shape_drawing";
   Shape newShape = Shape();
   List<Shape> shapesList = [];
-
+  List<Shape> nigromanticList = []; // list with undoed poligons
   bool readyExample = false;
   late dynamic dataExample;
 
@@ -78,6 +78,22 @@ class AppData with ChangeNotifier {
     if (newShape.points.length >= 2) {
       shapesList.add(newShape);
       newShape = Shape();
+      notifyListeners();
+    }
+  }
+
+  void undo() {
+    if (shapesList.isNotEmpty) {
+      nigromanticList.add(shapesList.last);
+      shapesList.removeLast();
+      notifyListeners();
+    }
+  }
+
+  void redo() {
+    if (nigromanticList.isNotEmpty) {
+      shapesList.add(nigromanticList.last);
+      nigromanticList.removeLast();
       notifyListeners();
     }
   }
