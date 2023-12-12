@@ -12,9 +12,14 @@ class LayoutSidebarRight extends StatelessWidget {
   Widget build(BuildContext context) {
     AppData appData = Provider.of<AppData>(context);
     CDKTheme theme = CDKThemeNotifier.of(context)!.changeNotifier;
-
+    final GlobalKey<CDKDialogPopoverArrowedState> DialogPopoverKey =
+        GlobalKey();
+    GlobalKey<CDKButtonColorState> backgroundColorKey =
+        GlobalKey<CDKButtonColorState>();
     Color backgroundColor = theme.backgroundSecondary2;
     double screenHeight = MediaQuery.of(context).size.height;
+    ValueNotifier<Color> _valueColorNotifier =
+        ValueNotifier(Color.fromARGB(255, 0, 0, 0));
 
     TextStyle fontBold =
         const TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
@@ -76,6 +81,48 @@ class LayoutSidebarRight extends StatelessWidget {
                                       appData.setDocHeight(value);
                                     },
                                   ))
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Text("Document properties:", style: fontBold),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text("Background color:", style: font),
+                              const SizedBox(width: 4),
+                              ValueListenableBuilder<Color>(
+                                  valueListenable: _valueColorNotifier,
+                                  builder: (context, value, child) {
+                                    return CDKButtonColor(
+                                        key: backgroundColorKey,
+                                        color: _valueColorNotifier.value,
+                                        onPressed: () {
+                                          print(_valueColorNotifier.value);
+                                          CDKDialogsManager.showPopoverArrowed(
+                                              key: DialogPopoverKey,
+                                              context: context,
+                                              anchorKey: backgroundColorKey,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ValueListenableBuilder<
+                                                    Color>(
+                                                  valueListenable:
+                                                      _valueColorNotifier,
+                                                  builder:
+                                                      (context, value, child) {
+                                                    return CDKPickerColor(
+                                                      color: value,
+                                                      onChanged: (color) {
+                                                        _valueColorNotifier
+                                                            .value = color;
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ));
+                                        });
+                                  })
                             ],
                           ),
                           const SizedBox(height: 16),

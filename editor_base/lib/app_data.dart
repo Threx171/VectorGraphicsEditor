@@ -13,6 +13,7 @@ class AppData with ChangeNotifier {
   List<Shape> shapesList = [];
   List<Shape> nigromanticList = []; // list with undoed poligons
   bool readyExample = false;
+  bool backgroundExist = false;
   late dynamic dataExample;
   final ValueNotifier<Color> valueColorNotifier =
       ValueNotifier(const Color(0x800080FF));
@@ -97,6 +98,12 @@ class AppData with ChangeNotifier {
       shapesList.add(nigromanticList.last);
       nigromanticList.removeLast();
       notifyListeners();
+    }
+  }
+
+  void addBackground() {
+    if (!backgroundExist) {
+      backgroundExist = true;
     }
   }
 }
