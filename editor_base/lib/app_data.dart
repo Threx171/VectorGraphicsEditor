@@ -14,6 +14,8 @@ class AppData with ChangeNotifier {
   List<Shape> nigromanticList = []; // list with undoed poligons
   bool readyExample = false;
   late dynamic dataExample;
+  final ValueNotifier<Color> valueColorNotifier =
+      ValueNotifier(const Color(0x800080FF));
 
   void setZoom(double value) {
     zoom = value.clamp(25, 500);
